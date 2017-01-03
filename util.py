@@ -1,6 +1,6 @@
 """Helper functions for testing Dropsort implementations."""
 
-import random
+import math, random
 
 def partial_shuffle_orig(ls, randomness):
   """Approximate reimplementation of the algorithm in
@@ -12,6 +12,24 @@ def partial_shuffle_orig(ls, randomness):
   for i in range(len(copy)):
     if random.random() < randomness:
       copy[i] = random.choice(ls)
+  return copy
+
+def partial_shuffle_sample(ls, randomness):
+  """Partially shuffles a list by selecting a subset of indicies to shuffle,
+  leaving other indicies alone. Note this means a low randomness value will
+  effectively round-down to zero (a subset of size zero or one cannot be
+  shuffled).
+  """
+  num_shuffle = math.ceil(randomness * len(ls))
+  print(num_shuffle)
+  indicies = random.sample(range(len(ls)), num_shuffle)
+  print(indicies)
+  indicies_shuffled = indicies[:]
+  random.shuffle(indicies_shuffled)
+  print(indicies_shuffled)
+  copy = ls[:]
+  for i in range(len(indicies)):
+    copy[indicies_shuffled[i]] = ls[indicies[i]]
   return copy
 
 def partial_shuffle(ls, randomness):
