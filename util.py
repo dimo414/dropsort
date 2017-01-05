@@ -55,9 +55,10 @@ def is_sublist(ls, subls):
   """Returns true if every element of subls exists, in order, in ls."""
   if len(ls) < len(subls):
     return False
-  ls_i, subls_i = 0, 0
-  while ls_i < len(ls) and subls_i < len(subls):
-    if ls[ls_i] == subls[subls_i]:
-      ls_i += 1
-    subls_i +=1
+  subls_i = 0
+  for i, e in enumerate(ls):
+    if subls_i >= len(subls):
+      return True
+    if e == subls[subls_i]:
+      subls_i += 1
   return subls_i == len(subls)

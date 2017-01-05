@@ -23,6 +23,7 @@ def test_is_sorted():
   assert not util.is_sorted([5,3,9,2,6,1])
 
 def test_is_sublist():
+  assert util.is_sublist(list(range(10)), list(range(10)))
   assert util.is_sublist(list(range(10)), list(range(5)))
   assert not util.is_sublist(list(range(5)), list(range(10)))
 
