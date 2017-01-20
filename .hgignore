@@ -1,3 +1,5 @@
+glob:.project
+glob:.pydevproject
 glob:__pycache__/*
 glob:.cache/*
 glob:*.pyc
