@@ -5,6 +5,7 @@ out of order."""
 
 import util
 
+from collections import deque
 from heapq import merge
 
 def _keyify(ls, key):
@@ -119,6 +120,9 @@ def dropsort_between_consecutive(ls, n=3, key=lambda k: k):
 def dropsort_minmax(ls, key=lambda k: k):
   """Precomputes the min/max values and uses that as a heuristic to determine
   which element to remove.
+
+  Note this computes the distance between elements, so the key function must
+  return an arithmetic type (+-*/, can be cast to an int).
   """
   if len(ls) <= 1:
     return ls[:]
@@ -141,8 +145,58 @@ def dropsort_minmax(ls, key=lambda k: k):
   return _unkeyify(result)
 
 
+def dropsort_window(ls, window_size=10, key=lambda k: k):
+  """Uses a fixed-size moving buffer to improve retention.
+
+  For each element in the input it is added to the end of the buffer. Then the
+  head of the buffer is considered for addition to the result list. If it's a
+  valid addition (greater-than or equal-to the previously accepted result) the
+  window is traversed once to determine whether adding the element would
+  cause more elements in the window to be excluded.
+
+  This means the runtime of this function is technically O(n*k), however the
+  window size can be treated as a constant, making it effectively linear.
+  """
+  if len(ls) <= 1:
+    return ls[:]
+
+  key_ls = _keyify(ls, key)
+  result = []
+  window = deque()
+
+  def should_accept(value):
+    accept, reject = 1, 0
+    accept_max, reject_max = value, result[-1] if result else None
+    for e in window:
+      if e >= accept_max:
+        accept += 1
+        accept_max = e
+      if not reject_max or e >= reject_max:
+        reject += 1
+        reject_max = e
+    return accept >= reject
+
+  def decide():
+    value = window.popleft()
+    if ((not result or result[-1] <= value) and
+        should_accept(value)):
+      result.append(value)
+
+  for e in key_ls:
+    window.append(e)
+    # always ensure the buffer is full
+    if len(window) < window_size:
+      continue
+
+    decide()
+
+  # drain the window
+  while window:
+    decide()
+  return _unkeyify(result)
+
 # basic verify
 if __name__ == '__main__':
   for f in (dropsort, drop_merge_sort, dropsort_between, dropsort_consecutive,
-      dropsort_between_consecutive, dropsort_minmax):  
+      dropsort_between_consecutive, dropsort_minmax, dropsort_window):
     util.verify(f)
