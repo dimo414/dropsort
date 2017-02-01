@@ -14,6 +14,12 @@ def _keyify(ls, key):
 def _unkeyify(key_ls):
   return [e[1] for e in key_ls]
 
+def _curry(f, n):
+  def curried(ls, key=lambda k: k):
+    return f(ls, n, key)
+  curried.__name__ = f.__name__
+  return curried
+
 def dropsort(ls, key=lambda k: k):
   """The original algorithm, per
   http://www.dangermouse.net/esoteric/dropsort.html"""
@@ -194,6 +200,21 @@ def dropsort_window(ls, window_size=10, key=lambda k: k):
   while window:
     decide()
   return _unkeyify(result)
+
+DROPSORTS = (
+  dropsort,
+  dropsort_between,
+  _curry(dropsort_consecutive, 10), # TODO pick ideal n
+  _curry(dropsort_between_consecutive, 10), # TODO pick ideal n
+  dropsort_minmax,
+  _curry(dropsort_window, 10), # TODO pick ideal n
+)
+
+PARAMETERIZED_DROPSORTS = (
+  dropsort_consecutive,
+  dropsort_between_consecutive,
+  dropsort_window
+)
 
 # basic verify
 if __name__ == '__main__':
