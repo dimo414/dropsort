@@ -16,9 +16,12 @@ def assert_sublist(ls, subls):
     (dropsort.dropsort),
     (dropsort.dropsort_between),
     (dropsort.dropsort_consecutive),
+    (lambda ls: dropsort.dropsort_consecutive(ls, 1)),
     (dropsort.dropsort_between_consecutive),
+    (lambda ls: dropsort.dropsort_between_consecutive(ls, 1)),
     (dropsort.dropsort_minmax),
     (dropsort.dropsort_window),
+    (lambda ls: dropsort.dropsort_window(ls, 1)),
 ])
 def test_dropsort(f, size=100):
   """Verifies that f returns a sorted list when passed a possibly-unsorted one.

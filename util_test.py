@@ -7,6 +7,9 @@ def check_shuffle(f):
     result = f(ls, r)
     assert ls == sorted(result)
 
+def test_full_shuffle():
+  check_shuffle(util.full_shuffle)
+
 # Not a valid shuffle
 #def test_partial_shuffle_orig():
 #  check_shuffle(util.partial_shuffle_orig)

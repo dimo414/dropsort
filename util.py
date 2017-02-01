@@ -2,6 +2,11 @@
 
 import math, random
 
+def full_shuffle(ls, randomness=True):
+  """Real shuffle, for comparison with partial shuffles below."""
+  if not randomness: return ls[:] # for compatiblitly with other shuffles
+  return random.sample(ls, k=len(ls))
+
 def partial_shuffle_orig(ls, randomness):
   """Approximate reimplementation of the algorithm in
   https://bitbucket.org/dimo414/dropsort/src/pristine/Research/DropsortTest/Dropsort.cs?t#Dropsort.cs-25
@@ -22,12 +27,12 @@ def partial_shuffle_sample(ls, randomness):
   shuffled).
   """
   num_shuffle = int(math.ceil(randomness * len(ls)))
-  print(num_shuffle)
+  #print(num_shuffle)
   indicies = random.sample(range(len(ls)), num_shuffle)
-  print(indicies)
+  #print(indicies)
   indicies_shuffled = indicies[:]
   random.shuffle(indicies_shuffled)
-  print(indicies_shuffled)
+  #print(indicies_shuffled)
   copy = ls[:]
   for i in range(len(indicies)):
     copy[indicies_shuffled[i]] = ls[indicies[i]]
@@ -46,6 +51,13 @@ def partial_shuffle(ls, randomness, reverse=True):
         copy[i] = copy[j]
         copy[j] = tmp
   return copy
+
+SHUFFLES = (
+  full_shuffle,
+  partial_shuffle_orig,
+  partial_shuffle_sample,
+  partial_shuffle,
+)
 
 def is_sorted(ls):
   """Returns true if the list is sorted"""
