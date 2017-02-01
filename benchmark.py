@@ -29,7 +29,7 @@ def compute_retained_ratio(f, *,
 
   return OrderedDict((k, v/k/iters) for k, v in retained.items())
 
-def compute_parameterized_retained_ratio(f, min_n=10, max_n=100, **kwargs):
+def compute_parameterized_retained_ratio(f, min_n=1, max_n=100, **kwargs):
   """Computes the retainment rate of a given function that takes a list and a n.
 
   Invokes compute_retained_ratio once for each value between `min_range` and
@@ -39,8 +39,5 @@ def compute_parameterized_retained_ratio(f, min_n=10, max_n=100, **kwargs):
   """
   ratios = OrderedDict()
   for n in range(min_n, max_n + 1):
-    def f_n(ls):
-      return f(ls, n)
-    f_n.__name__ = '%s:n=%d' % (f.__name__, n)
-    ratios[n] = compute_retained_ratio(f_n, **kwargs)
+    ratios[n] = compute_retained_ratio(dropsort._curry(f, n), **kwargs)
   return ratios
