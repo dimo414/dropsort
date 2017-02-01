@@ -24,7 +24,7 @@ def compute_retained_ratio(f, *,
   retained = Counter()
   for size in range(min_size, max_size + 1):
     for _ in range(iters):
-      ls = shuffle(ls_gen(size))
+      ls = shuffle(ls_gen(size), .5) # TODO make this tune-able
       retained[size] += len(f(ls))
 
   return OrderedDict((k, v/k/iters) for k, v in retained.items())
