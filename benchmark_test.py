@@ -14,19 +14,18 @@ def test_compute_retained_ratio():
 
 def test_compute_parameterized_retained_ratio():
   ratios = benchmark.compute_parameterized_retained_ratio(
-    lambda ls, n: ls[:n], max_n=12, max_size=12, iters=10)
+    lambda ls, n, _: ls[:n], max_n=3, max_size=12, iters=10)
   assert ratios == {
-    10: {10: 1.0,
-         11: 0.9090909090909092,
-         12: 0.8333333333333334
-        },
-    11: {10: 1.0,
-         11: 1.0,
-         12: 0.9166666666666666
-        },
-    12: {10: 1.0,
-         11: 1.0,
-         12: 1.0
-        }
+    1: {10: 0.1,
+        11: 0.09090909090909091,
+        12: 0.08333333333333334
+       },
+    2: {10: 0.2,
+        11: 0.18181818181818182,
+        12: 0.16666666666666669
+       },
+    3: {10: 0.3,
+        11: 0.2727272727272727,
+        12: 0.25
+       }
   }
-

@@ -14,10 +14,10 @@ def _keyify(ls, key):
 def _unkeyify(key_ls):
   return [e[1] for e in key_ls]
 
-def _curry(f, n):
+def _curry(f, n): # move to util?
   def curried(ls, key=lambda k: k):
     return f(ls, n, key)
-  curried.__name__ = f.__name__
+  curried.__name__ = '%s:n=%d' % (f.__name__, n)
   return curried
 
 def dropsort(ls, key=lambda k: k):
